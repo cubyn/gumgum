@@ -7,6 +7,9 @@ const keyWords = ['body', 'query', 'filter', 'term', 'aggs', 'global', 'bool',
 
 
 class EsWord {
+    // called when we use g[something](...args)
+    // something is the word arguments
+    // and args is the list of arguments given to the something function
     constructor(word, args, isArrayKeyWord = false) {
         if (isArrayKeyWord) {
             this.parseArray(word, args[0]);
@@ -15,7 +18,9 @@ class EsWord {
         }
     }
 
-    // register an array type
+    // g.must([{ key: 'a' }, { key: 'b' }])
+    // out
+    // { "must": [{ key: 'a' }, { key: 'b' }] }
     parseArray(word, args) {
         const body = args.map(arg => {
             if (arg instanceof EsWord) {
@@ -29,8 +34,11 @@ class EsWord {
         this.body = body;
     }
 
-    // register an object type
+    // g.must({ key: 'a' }, { key2: 'b' })
+    // out
+    // { "must": { key: 'a', key2: 'b' } }
     parseObject(word, args) {
+
         const body = args.reduce((acc, arg) => {
             if (arg instanceof EsWord) {
                 return Object.assign(acc, arg.compile());
@@ -43,7 +51,7 @@ class EsWord {
         this.body = body;
     }
 
-    // return the elastic query
+    // return the elastic query as a js object
     compile() {
         return { [this.word]: this.body };
     }
@@ -56,6 +64,7 @@ function gumgum() {
     const ctx = function (arg) {
         return {
             compile() {
+                // bubble up the chain
                 let dest = arg;
 
                 ctx.chain.forEach(elem => {
@@ -84,6 +93,7 @@ function gumgum() {
 }
 
 keyWords.forEach(kw => {
+    // must is never an array
     if (kw === 'must') {
         gumgum[kw] = function (...arg) {
             return new EsWord(kw, [arg]);
