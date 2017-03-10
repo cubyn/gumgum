@@ -1,6 +1,6 @@
 #Gumgum
 
-Gumgum is a elastic search query builder.
+Gumgum is an Elastic Search query builder.
 
 Example:
 ```javascript
