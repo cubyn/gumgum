@@ -1,0 +1,8 @@
+{
+  "name": "gumgum",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/cubyn/gumgum.git",
+  "author": "BEYDON Nori <beydon.nori@gmail.com>",
+  "license": "MIT"
+}
