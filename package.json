@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "https://github.com/cubyn/gumgum.git",
   "author": "BEYDON Nori <beydon.nori@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "camelcase": "^4.0.0"
+  }
 }

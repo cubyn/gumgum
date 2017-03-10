@@ -1,3 +1,7 @@
+const camelcase = require('camelcase');
+const keyWords = ['body', 'query', 'filter', 'term', 'aggs', 'global', 'bool',
+'multi_match', 'must', 'filtered', 'should', 'must_not', 'range', 'match'];
+
 class EsWord {
     constructor(word, args, isArrayKeyWord = false) {
         if (isArrayKeyWord) {
@@ -38,53 +42,50 @@ class EsWord {
     }
 }
 
-const gumgum = {
-    EsWord,
-    body(...arg) {
-        return new EsWord('body', arg, Array.isArray(arg[0]));
-    },
-    query(...arg) {
-        return new EsWord('query', arg, Array.isArray(arg[0]));
-    },
-    filter(...arg) {
-        return new EsWord('filter', arg, Array.isArray(arg[0]));
-    },
-    term(...arg) {
-        return new EsWord('term', arg, Array.isArray(arg[0]));
-    },
-    aggs(...arg) {
-        return new EsWord('aggs', arg, Array.isArray(arg[0]));
-    },
-    global(...arg) {
-        return new EsWord('global', arg, Array.isArray(arg[0]));
-    },
-    bool(...arg) {
-        return new EsWord('bool', arg, Array.isArray(arg[0]));
-    },
-    multiMatch(...arg) {
-        return new EsWord('multi_match', arg, Array.isArray(arg[0]));
-    },
-    must(...arg) {
-        return new EsWord('must', arg, Array.isArray(arg[0]));
-    },
-    filtered(...arg) {
-        return new EsWord('filtered', arg, Array.isArray(arg[0]));
-    },
-    should(...arg) {
-        return new EsWord('should', arg, Array.isArray(arg[0]));
-    },
-    mustNot(...arg) {
-        return new EsWord('must_not', arg, Array.isArray(arg[0]));
-    },
-    range(...arg) {
-        return new EsWord('range', arg, Array.isArray(arg[0]));
-    },
-    match(arg) {
-        return new EsWord('match', [arg]);
-    },
-    key(k, ...arg) {
-        return new EsWord(k, arg, Array.isArray(arg[0]));
+function gumgum() {
+    const ctx = function (arg) {
+        return {
+            compile() {
+                const stack = ctx.chain.reverse();
+                let dest = arg;
+
+                stack.forEach(elem => {
+                    dest = { [elem]: dest };
+                });
+
+                return dest;
+            }
+        }
+    };
+
+    ctx.chain = [];
+
+    keyWords.forEach(kw => {
+        Reflect.defineProperty(ctx, camelcase(kw), {
+            get() {
+                ctx.chain.push(kw);
+                return ctx;
+            }
+        })
+    });
+
+    return ctx;
+}
+
+keyWords.forEach(kw => {
+    if (kw === 'must') {
+        gumgum[kw] = function (...arg) {
+            return new EsWord(kw, [arg]);
+        };
+    } else {
+        gumgum[camelcase(kw)] = function (...arg) {
+            return new EsWord(kw, arg, Array.isArray(arg[0]));
+        };
     }
-};
+});
+
+gumgum.key = function (k, ...arg) {
+    return new EsWord(k, arg, Array.isArray(arg[0]));
+}
 
 module.exports = gumgum;
