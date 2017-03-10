@@ -1,17 +1,22 @@
+// dependecies
 const camelcase = require('camelcase');
+
+// available keywords for search
 const keyWords = ['body', 'query', 'filter', 'term', 'aggs', 'global', 'bool',
 'multi_match', 'must', 'filtered', 'should', 'must_not', 'range', 'match'];
+
 
 class EsWord {
     constructor(word, args, isArrayKeyWord = false) {
         if (isArrayKeyWord) {
-            this.constructArray(word, args[0]);
+            this.parseArray(word, args[0]);
         } else {
-            this.constructObject(word, args);
+            this.parseObject(word, args);
         }
     }
 
-    constructArray(word, args) {
+    // register an array type
+    parseArray(word, args) {
         const body = args.map(arg => {
             if (arg instanceof EsWord) {
                 return arg.compile();
@@ -24,7 +29,8 @@ class EsWord {
         this.body = body;
     }
 
-    constructObject(word, args) {
+    // register an object type
+    parseObject(word, args) {
         const body = args.reduce((acc, arg) => {
             if (arg instanceof EsWord) {
                 return Object.assign(acc, arg.compile());
@@ -37,19 +43,22 @@ class EsWord {
         this.body = body;
     }
 
+    // return the elastic query
     compile() {
         return { [this.word]: this.body };
     }
 }
 
+// gumgum start a chain if called directly
 function gumgum() {
+
+    // ctx is used to save and to end the chain
     const ctx = function (arg) {
         return {
             compile() {
-                const stack = ctx.chain.reverse();
                 let dest = arg;
 
-                stack.forEach(elem => {
+                ctx.chain.forEach(elem => {
                     dest = { [elem]: dest };
                 });
 
@@ -58,15 +67,17 @@ function gumgum() {
         }
     };
 
+    // the chain
     ctx.chain = [];
 
+    // for each available elastic keywords create a getter
     keyWords.forEach(kw => {
         Reflect.defineProperty(ctx, camelcase(kw), {
             get() {
-                ctx.chain.push(kw);
+                ctx.chain.unshift(kw);
                 return ctx;
             }
-        })
+        });
     });
 
     return ctx;
