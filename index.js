@@ -38,7 +38,6 @@ class EsWord {
     // out
     // { "must": { key: 'a', key2: 'b' } }
     parseObject(word, args) {
-
         const body = args.reduce((acc, arg) => {
             if (arg instanceof EsWord) {
                 return Object.assign(acc, arg.compile());
@@ -93,16 +92,9 @@ function gumgum() {
 }
 
 keyWords.forEach(kw => {
-    // must is never an array
-    if (kw === 'must') {
-        gumgum[kw] = function (...arg) {
-            return new EsWord(kw, [arg]);
-        };
-    } else {
-        gumgum[camelcase(kw)] = function (...arg) {
-            return new EsWord(kw, arg, Array.isArray(arg[0]));
-        };
-    }
+    gumgum[camelcase(kw)] = function (...arg) {
+        return new EsWord(kw, arg, Array.isArray(arg[0]));
+    };
 });
 
 gumgum.key = function (k, ...arg) {
