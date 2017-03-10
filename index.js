@@ -49,6 +49,9 @@ const gumgum = {
     filter(...arg) {
         return new EsWord('filter', arg, Array.isArray(arg[0]));
     },
+    term(...arg) {
+        return new EsWord('term', arg, Array.isArray(arg[0]));
+    },
     aggs(...arg) {
         return new EsWord('aggs', arg, Array.isArray(arg[0]));
     },
@@ -63,6 +66,9 @@ const gumgum = {
     },
     must(...arg) {
         return new EsWord('must', arg, Array.isArray(arg[0]));
+    },
+    filtered(...arg) {
+        return new EsWord('filtered', arg, Array.isArray(arg[0]));
     },
     should(...arg) {
         return new EsWord('should', arg, Array.isArray(arg[0]));
