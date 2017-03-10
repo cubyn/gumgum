@@ -17,7 +17,7 @@ const query = g.query(
     g.key('color',
         g.filter(g.bool(
             g.must([
-                g.query(g.bool(g.should(g.match({ name: 'carotte' }))))
+                g().query.bool.should.match({ name: 'carotte' })
             ])
         ))
     )
