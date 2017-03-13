@@ -71,6 +71,8 @@ function gumgum() {
                     dest = { [elem]: dest };
                 });
 
+                ctx.chain.unshift(firstChain);
+
                 return dest;
             }
         }
