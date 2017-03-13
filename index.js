@@ -60,12 +60,13 @@ class EsWord {
 function gumgum() {
 
     // ctx is used to save and to end the chain
-    const ctx = function (arg) {
+    const ctx = function (...arg) {
         return {
             compile() {
-                // bubble up the chain
-                let dest = arg;
+                let firstChain = ctx.chain.shift();
+                let dest = new EsWord(firstChain, arg, Array.isArray(arg[0])).compile();
 
+                // bubble up the chain
                 ctx.chain.forEach(elem => {
                     dest = { [elem]: dest };
                 });
