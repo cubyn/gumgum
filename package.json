@@ -4,5 +4,15 @@
   "main": "index.js",
   "repository": "https://github.com/cubyn/gumgum.git",
   "author": "BEYDON Nori <beydon.nori@gmail.com>",
-  "license": "MIT"
+  "scripts": {
+      "test": "mocha test.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "camelcase": "^4.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
 }

@@ -2,7 +2,10 @@
 
 Gumgum is an Elastic Search query builder.
 
-Example:
+##Example Usage
+
+Simple example
+
 ```javascript
 const g = require('gumgum')
 
@@ -17,7 +20,7 @@ const query = g.query(
     g.key('color',
         g.filter(g.bool(
             g.must([
-                g.query(g.bool(g.should(g.match({ name: 'carotte' }))))
+                g().query.bool.should.match({ name: 'carotte' })
             ])
         ))
     )
@@ -25,11 +28,7 @@ const query = g.query(
 
 console.log(g.compile())
 
-```
-
-Output:
-
-```json
+// output:
 
 {
   "query": {
@@ -73,5 +72,15 @@ Output:
 }
 
 ```
+
+##Contributing
+
+Fork it ( https://github.com/cubyn/gumgum/fork )
+Create your feature branch (git checkout -b my-new-feature)
+Commit your changes (git commit -am 'Add some feature')
+Push to the branch (git push origin my-new-feature)
+Create a new Pull Request
+
+----------
 
 Made with ♥ by Cubyn Team
