@@ -23,7 +23,7 @@ class EsWord {
     // { "must": [{ key: 'a' }, { key: 'b' }] }
     parseArray(word, args) {
         const body = args.map(arg => {
-            if (arg instanceof EsWord) {
+            if (arg instanceof EsWord || (arg && typeof arg.compile === 'function')) {
                 return arg.compile();
             } else {
                 return arg;

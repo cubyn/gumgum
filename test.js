@@ -50,4 +50,38 @@ describe('Gumgum', () => {
             should: { bool: { must: obj } }
         });
     });
+
+
+    it('Work with complex query', () => {
+        const res = ['123', '234']
+            .map(type => g().query.bool(
+                g().must.match({ type }),
+                g.mustNot([
+                    g.match({ status: 'created' }),
+                    g.match({ status: 'terminated' })
+                ])
+            ).compile());
+
+        expect(res).to.deep.equal([{
+            query: {
+                bool: {
+                    must: { match: { type: '123' } },
+                    must_not: [
+                        { match: { status: 'created' } },
+                        { match: { status: 'terminated' } }
+                    ]
+                }
+            }
+        }, {
+            query: {
+                bool: {
+                    must: { match: { type: '234' } },
+                    must_not: [
+                        { match: { status: 'created' } },
+                        { match: { status: 'terminated' } }
+                    ]
+                }
+            }
+        }]);
+    });
 });
