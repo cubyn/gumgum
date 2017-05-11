@@ -2,7 +2,7 @@
 const camelcase = require('camelcase');
 
 // available keywords for search
-const keyWords = ['body', 'query', 'filter', 'term', 'aggs', 'global', 'bool',
+const keyWords = ['body', 'query', 'sort', 'filter', 'term', 'aggs', 'global', 'bool',
 'multi_match', 'must', 'filtered', 'should', 'must_not', 'range', 'match'];
 
 
@@ -39,7 +39,7 @@ class EsWord {
     // { "must": { key: 'a', key2: 'b' } }
     parseObject(word, args) {
         const body = args.reduce((acc, arg) => {
-            if (arg instanceof EsWord) {
+            if (arg instanceof EsWord || (arg && typeof arg.compile === 'function')) {
                 return Object.assign(acc, arg.compile());
             } else {
                 return Object.assign(acc, arg);
