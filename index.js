@@ -3,7 +3,7 @@ const camelcase = require('camelcase');
 
 // available keywords for search
 const keyWords = ['body', 'query', 'sort', 'filter', 'term', 'aggs', 'global', 'bool',
-'multi_match', 'must', 'filtered', 'should', 'must_not', 'range', 'match'];
+'multi_match', 'must', 'filtered', 'should', 'must_not', 'range', 'match', 'match_all'];
 
 
 class EsWord {
