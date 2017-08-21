@@ -1,8 +1,8 @@
-#Gumgum
+# Gumgum
 
 Gumgum is an Elastic Search query builder.
 
-##Example Usage
+## Example Usage
 
 Simple example
 
@@ -73,7 +73,7 @@ console.log(g.compile())
 
 ```
 
-##Contributing
+## Contributing
 
 Fork it ( https://github.com/cubyn/gumgum/fork )
 Create your feature branch (git checkout -b my-new-feature)
